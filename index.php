@@ -2,7 +2,7 @@
 <?php
 //dool
     include('ssh_connection.php');
-        $mypass = "rit cs password"; //enter your RIT cs password here to connect
+        $mypass = "pwd"; //enter your RIT cs password here to connect
     require_once "common/variables.php";
 	
 	//author: SB; comment: set the default language to "C"
@@ -10,6 +10,8 @@
 	{
 		$_GET['lang'] = "C";
 	}
+	
+	//echo $_GET['lang'];
 ?>
 
 <html lang="en">
@@ -124,7 +126,15 @@
 							Languages
 						</a>
 					</li>
-					<li class=""><label id="lblprog" class="navlabel">Current Language : <?php echo $_GET['lang'] ?></label></li>
+					<li class="">
+						<label id="lblprog" class="navlabel"
+							style="padding: 10px 15px 5px; float:right;
+							position:relative;
+							left: 400px;
+							color: #777777;">
+							Current Language : <?php echo $_GET['lang'] ?>
+						</label>
+					</li>
 					</ul>
 				</div>
 			</div>
@@ -150,7 +160,7 @@
                             <textarea id ="code" name="code" class="span8"
 								style="height:442px; width:100%; max-width:100%; min-width:100%;"></textarea>
                             <script>
-                                <? if(isset($_GET['lang']) && $_GET['lang'] == "javascript") {?>
+                                <?php if(isset($_GET['lang']) && $_GET['lang'] == 'javascript') {?>
                                 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                        mode: "javascript",
                                        parserfile: "js/javascript.js",	
@@ -177,9 +187,9 @@
                                        
                                 }
                         );
-                            <? } ?>
+                            <?php } ?>
 
-                                <? if(isset($_GET['lang']) && $_GET['lang'] == "py") {?>
+                                <?php if(isset($_GET['lang']) && $_GET['lang'] == 'py') {?>
                             var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                             mode: {name: "python",
                             version: 2,
@@ -189,9 +199,9 @@
                             tabMode: "shift",
                             matchBrackets: true
                             });
-                               <? }?>
+                               <?php }?>
 
-                            <? if(isset($_GET['lang']) && $_GET['lang'] == "c") { ?>
+                            <?php if(isset($_GET['lang']) && $_GET['lang'] == 'c') { ?>
                             var jsEditor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                mode: "javascript",
                                lineNumbers: true,
@@ -200,26 +210,26 @@
                                matchBrackets: true
 
                             });
-                                <? }?>
+                                <?php }?>
                                     
-                             <? if(isset($_GET['lang']) && $_GET['lang'] == "cpp") { ?>
+                             <?php if(isset($_GET['lang']) && $_GET['lang'] == 'cpp') { ?>
                             var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                             lineNumbers: true,
                             matchBrackets: true,
                             mode: "text/x-c++src"
                             });
-                              <? } ?>
+                              <?php } ?>
 
-                             <?if($_GET['lang'] == "java") {?>
+                             <?php if($_GET['lang'] == 'java') {?>
                                  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                 lineNumbers: true,
                                 matchBrackets: true,
                                 mode: "text/x-java"
                                 });
 
-                                 <? } ?>
+                                 <?php } ?>
 
-                              <? if(isset($_GET['lang']) && $_GET['lang'] == "php") { ?>
+                              <?php if(isset($_GET['lang']) && $_GET['lang'] == 'php') { ?>
                                   
                                   var phpeditor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                    lineNumbers: true,
@@ -231,8 +241,8 @@
                                     tabMode: "shift"
 
                                   });
-                                  <? } ?>
-
+                                  <?php } ?>
+                            
 
                                 </script>
 
@@ -288,25 +298,36 @@
 		  <div class="alert alert-info" style="margin-bottom:10px;">
 		  	Compiler's output here:	
 		  </div>
-		  <?php
+		<?php
 		   $ssh = new NET_SSH2('glados.cs.rit.edu');
-		   if(!$ssh->login('rsd3565',$mypass))
+		   if(!$ssh->login('scb8803',$mypass))
 		   {
-			 ?> <pre> <?php  exit('Login Failed'); ?></pre>
-		   <?}
+		?> 
+			 
+			 <pre> <?php  echo("Login Failed"); ?></pre>
+		   <?php
+		   }
 		   else
-		   {?>
-			 <? $var =  $ssh->exec('gcc -o main Hello_World.c'); ?>
-			 <? if(sizeof($var)-1>0) {
+		   {
+				$var =  $ssh->exec('gcc -o main hello.c');
+				if(sizeof($var)-1>0) 
+				{
+			?>
+			 <pre><?php echo count($var); ?></pre>
+			 <?php
+				}
+				
+				$result = $ssh->exec('./main');
 			 ?>
-			 <pre><? echo count($var); ?></pre>
-			 <? }
-		 ?>
-			 <?$result = $ssh->exec('./main');?>
-			 <pre><? if(count($result)>0) {?>
-			<b>Result</b> <br /> <? echo $result; }  ?></pre>
+			 <pre>
+			 <?php if(count($result)>0) 
+			 {
+			 ?>
+				<b>Result</b> <br /> <?php echo $result; }  ?></pre>
 
-		   <?}?>
+		   <?php
+		   }
+		   ?>
 		</div>
 		
 		
@@ -353,21 +374,9 @@
     <!-- codemirror js scripts -->
     
   </body>
-  
-  
   <style>
-	.navlabel
-	{
-		padding: 10px 15px 5px;
-	}	
 	
-	#lblprog
-	{
-		float:right;
-		position:relative;
-		left: 400px;
-		color: #777777;
-	}
-  
   </style>
+  
+  
 </html>
