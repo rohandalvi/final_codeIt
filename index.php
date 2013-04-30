@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <?php
-//dool
-    include('ssh_connection.php');
-        $mypass = "pwd"; //enter your RIT cs password here to connect
+    
     require_once "common/variables.php";
+	session_start();
 	
 	//author: SB; comment: set the default language to "C"
 	if(!isset($_GET['lang']))
@@ -11,7 +10,6 @@
 		$_GET['lang'] = "C";
 	}
 	
-	//echo $_GET['lang'];
 ?>
 
 <html lang="en">
@@ -107,34 +105,34 @@
 					<li class="active"><a href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home</a></li>
 					<li><a href="#">Tutorials / Tips</a></li>
 					<li><a href="about.php">About</a></li>
+					
+					
 					</ul>
+					
 					</div>
 				</div>
 		</div>
 		
+		<form id="codeform" class="form-horizontal" action="handler/download.php" method="post" style="margin-bottom: 0px; margin-left: 40px;">
 		<div class="span7">
 			<div class="row">
 			    <div id="lang_anchor" class="navbar" style="margin-bottom:5px; margin-left:-20px;">
 					<div class="navbar-inner" style="margin-left:20px;">
 					<ul class="nav menu">
-					<li class="active ListItem"><a href="#">Run</a></li>
+					<li class="active ListItem"><input type="submit" id="runsubmit" name="submission" class="btn fa-input" value="Run"/></li>
 					<li id="test" class="">
-						<a id="langBut" class="" href="javascript:void(0)" 
-							onclick="pinUnpinLangPanel()"
-							rel="tooltip" title="Languages">
-							<!--<img class="anchor_nopad" src="LangList.png"/>-->
-							Languages
-						</a>
+						<input type="button" id="btnlanguage" name="btnlanguage" class="btn fa-input" value="Languages" 
+							onclick="pinUnpinLangPanel()" rel="tooltip" style="margin-left:20px;"/>
 					</li>
-					<li class="">
-						<label id="lblprog" class="navlabel"
-							style="padding: 10px 15px 5px; float:right;
-							position:relative;
-							left: 400px;
-							color: #777777;">
-							Current Language : <?php echo $_GET['lang'] ?>
+					</ul>
+					
+					<!-- Author: SB; Comment: used pull-right class of bootstrap instead of hardcoding the style of the label -->
+					<ul class="nav pull-right">
+					  <li class="">
+						<label style="padding: 10px 15px 5px; color: #777777;">
+						  Current Language :  <?php echo $_GET['lang'] ?>
 						</label>
-					</li>
+					  </li>
 					</ul>
 				</div>
 			</div>
@@ -154,7 +152,7 @@
 			
 			<!-- Author: Shardul Bagade; Comment: Call download.php which contains downloading script -->
 			<!-- Author: Shardul Bagade; Comment: download script shifted to handler folder -->
-			<form id="codeform" class="form-horizontal" action="handler/download.php" method="post">
+			
                             
                             <input type="hidden" value=<?php echo $_GET['lang'] ?> name="langhide" />
                             <textarea id ="code" name="code" class="span8"
@@ -250,12 +248,12 @@
 					<?php
 					include ("handler/testcases.php"); 
 					?>
-				<div class="row" style="margin-top:-10px;">
+				<div class="row" style="margin-top:10px;">
 					<div class="navbar" style="margin-bottom:5px;">
 						<div class="navbar-inner" style="margin-left:20px;">
 						<ul class="nav">
 						<!-- Author: Shardul Bagade; Comment: Button for downloading code -->
-						<li><input type="submit" id="search-submit" class="btn fa-input" value="Download Code"></li>
+						<li><input type="submit" id="dwnldsubmit" name="submission" class="btn fa-input" value="Download"></li>
 						<li><input type="button" id="btnshowtestcase" class="btn fa-input" value="Add test cases" style="margin-left:20px;"></li>
 						<script>
 							$("#btnshowtestcase").click(function () {
@@ -288,46 +286,32 @@
 				
 				
 				
-			</form>
+			
 			
 		</div>
+		</form>
 		</div>
 		
 		<div class="span4">
-		  <!--Sidebar content-->
-		  <div class="alert alert-info" style="margin-bottom:10px;">
-		  	Compiler's output here:	
-		  </div>
-		<?php
-		   $ssh = new NET_SSH2('glados.cs.rit.edu');
-		   if(!$ssh->login('scb8803',$mypass))
-		   {
-		?> 
-			 
-			 <pre> <?php  echo("Login Failed"); ?></pre>
-		   <?php
-		   }
-		   else
-		   {
-				$var =  $ssh->exec('gcc -o main hello.c');
-				if(sizeof($var)-1>0) 
+			<!--Sidebar content-->
+			<div class="alert alert-info" style="margin-bottom:10px;">
+				Compiler's output here:	
+			</div>
+			<?php
+				// Author: SB; Comment: ssh code shifted to download.php
+				if(isset($_SESSION['coderesult']))
 				{
-			?>
-			 <pre><?php echo count($var); ?></pre>
-			 <?php
-				}
-				
-				$result = $ssh->exec('./main');
-			 ?>
-			 <pre>
-			 <?php if(count($result)>0) 
-			 {
-			 ?>
-				<b>Result</b> <br /> <?php echo $result; }  ?></pre>
 
-		   <?php
-		   }
-		   ?>
+			?>
+				<pre><b>Output:</b><br/>
+				<?php  echo $_SESSION['coderesult']; ?></pre>
+			  
+			<?php
+			
+					unset($_SESSION['coderesult']);
+				}
+			?>
+		
 		</div>
 		
 		

@@ -31,5 +31,13 @@
 		return $random_string;
 	}
 	
+	
+	//author: SB; comment: function to redirect to specified URL
+	function RedirectToURL($url)
+    {
+        header("Location: $url");
+        exit;
+    }
+	
 
 ?>
