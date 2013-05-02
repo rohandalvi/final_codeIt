@@ -10,6 +10,14 @@
 		$_GET['lang'] = "C";
 	}
 	
+	//author: SB; comment: script for publish code functionality
+	$pubfilecontent = "";
+	unset($pubfilecontent);// unset the variable by default
+	if(isset($_GET['file']))
+	{
+		$pubfilecontent = file_get_contents('handler/'.$_GET['file'], true);
+	}
+	
 ?>
 
 <html lang="en">
@@ -156,7 +164,7 @@
                             
                             <input type="hidden" value=<?php echo $_GET['lang'] ?> name="langhide" />
                             <textarea id ="code" name="code" class="span8"
-								style="height:442px; width:100%; max-width:100%; min-width:100%;"></textarea>
+								style="height:442px; width:100%; max-width:100%; min-width:100%;"><?php if(isset($pubfilecontent)){echo $pubfilecontent;} ?></textarea>
                             <script>
                                 <?php if(isset($_GET['lang']) && $_GET['lang'] == 'javascript') {?>
                                 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -255,6 +263,7 @@
 						<!-- Author: Shardul Bagade; Comment: Button for downloading code -->
 						<li><input type="submit" id="dwnldsubmit" name="submission" class="btn fa-input" value="Download"></li>
 						<li><input type="button" id="btnshowtestcase" class="btn fa-input" value="Add test cases" style="margin-left:20px;"></li>
+						<li><input type="submit" id="btnpublish" name="submission" class="btn fa-input" value="Publish" style="margin-left:20px;"></li>
 						<script>
 							$("#btnshowtestcase").click(function () {
 								/// function to show the UI for test cases
@@ -282,12 +291,7 @@
 						</div>
 					</div>
 				</div>
-				
-				
-				
-				
-			
-			
+	
 		</div>
 		</form>
 		</div>

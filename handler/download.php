@@ -1,12 +1,15 @@
 <?PHP
 
 	// Author: Shardul Bagade
-	// Comment: Created file. Contains Download and Run program script
+	// v1.0 Author: Shardul Bagade; Comment: Created file. Contains Download script
+	// v1.1 Author: Shardul Bagade; Comment: Run script added
+	// v1.2 Author: Shardul Bagade; Comment: Publish code script added
 	
-	// import utilities file
+	// import files which are needed
 	require_once "..//common/utilities.php";
 	require_once "..//common/variables.php";
 	include('ssh_connection.php');
+	
 	session_start();
 	
 	
@@ -26,7 +29,7 @@
 		else
 		{
 			// run C program
-			if(isset($_POST['langhide']) && $_POST['langhide'] == "c")
+			if(isset($_POST['langhide']) && $_POST[ 'langhide'] == "c")
 			{
 				$result =  $ssh->exec('gcc -o main hello.c');
 				if($result != "")
@@ -84,7 +87,7 @@
 		RedirectToURL(BASE_URL."/codeIt/index.php");
 
 	}
-	else if(isset($_POST['submission']) && $_POST['submission'] == "Download") // download script starts here.
+	else if(isset($_POST['submission']) && $_POST['submission'] == "Download")
 	{
 	
 	
@@ -93,10 +96,9 @@
 			$a = $_POST['code'];
 			
 			// Author: SB; Comment: generate name of the file with random string
+			
 			$fname = get_random_string("possible", 4);
 			$myFile = $fname.".txt";
-			
-			//$myFile = "t.txt";
 			
 			// Author: SB; Comment: file extension functionality added
 			if(isset($_POST['langhide']))
@@ -114,7 +116,6 @@
 		}
 		
 		
-		
 		//download.php
 		//content type
 		header('Content-type: text/plain');
@@ -125,6 +126,29 @@
 		readfile($fname.".".$_POST['langhide']);
 		
 	}
+	else if(isset($_POST['submission']) && $_POST['submission'] == "Publish")// script to publish code
+	{
+		if(isset($_POST['code'])) {
+			$a = $_POST['code'];
+			
+			$count = 0;
+			do
+			{
+				// generate name of the file with random string
+				$fname = get_random_string("userfile", 8);
+				$random_no = str_pad(rand(0,99), 2, "0", STR_PAD_LEFT);
+				$myFile = 'user_'.$random_no.'_'.$fname.".txt";
+				
+			}while(file_exists($myFile));
+			
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			fwrite($fh, $a);
+			fclose($fh);
+		}
+		
+		RedirectToURL(BASE_URL."/codeIt/index.php?file=".$myFile);
+	}
+	
 
 	
 ?>
