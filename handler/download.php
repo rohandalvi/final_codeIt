@@ -4,7 +4,7 @@
 	// v1.0 Author: Shardul Bagade; Comment: Created file. Contains Download script
 	// v1.1 Author: Shardul Bagade; Comment: Run script added
 	// v1.2 Author: Shardul Bagade; Comment: Publish code script added
-	
+	// v1.3 Author: Tushar Nikam; Comment: Added RUN code for Python, C++ with Arguments
 	// import files which are needed
 	require_once "..//common/utilities.php";
 	require_once "..//common/variables.php";
@@ -16,11 +16,11 @@
 	// Author: SB; Comment: script to run programs of specified languages
 	if(isset($_POST['submission']) && $_POST['submission'] == "Run")
 	{
-		$mypass = "pwd";
+		$mypass = "Password Goes Here";
 		$result = "xxx";
 		//echo("Login ");
 		$ssh = new NET_SSH2('glados.cs.rit.edu');
-		if(!$ssh->login('scb8803',$mypass))
+		if(!$ssh->login('tln8399',$mypass))
 		{
 		
 			$result = "Login Failed";
@@ -40,8 +40,13 @@
 				else
 				{
 					// no compilation error. run the program.
-				
-					$result = $ssh->exec('./main');
+					//if(isset($_POST['testCase1'])){
+						
+						//$result = $ssh->exec('./main '.'testCase1.value');
+					//}
+					//else{
+						$result = $ssh->exec('./main '.$_POST['testCase']);
+					//}	
 					if(count($result)>0)
 					{
 						// run successful
@@ -54,11 +59,33 @@
 				}
 			}
 			
+			//run C++ Program
+			if(isset($_POST['langhide']) && $_POST['langhide'] == "cpp"){
+			
+				$result = $ssh->exec('g++ -o main hello.cpp');
+				if($result != "")
+				{
+					//echo "asdf";
+					// compilation error occured.
+				}
+				else
+				{
+					$result = $ssh->exec('./main '.$_POST['testCase']);
+					if(count($result)>0)
+					{
+						// run successful
+						unlink($_SERVER['DOCUMENT_ROOT'].'main'); // delete the exe file for that program
+						//echo $result;
+					}
+				}
+			}
+			
 			// run Java program
 			else if(isset($_POST['langhide']) && $_POST['langhide'] == "java")
 			{
+				//echo $_POST['testCase'];
 				echo "1111";
-				$result =  $ssh->exec('javac HelloWorld.java');
+				$result =  $ssh->exec('javac hello.java');
 				if($result != "")
 				{
 					echo "222";
@@ -66,16 +93,25 @@
 				}
 				else
 				{
+				
 					// no compilation error. run the program.
-					$result = $ssh->exec('java HelloWorld');
+					$result = $ssh->exec('java hello '.$_POST['testCase']);
+					
 					if(count($result)>0)
 					{
 						// run successful
-						unlink($_SERVER['DOCUMENT_ROOT'].'HelloWorld.class'); // delete the class file for that program
+						unlink($_SERVER['DOCUMENT_ROOT'].'hello.class'); // delete the class file for that program
 						//echo $result;
 					}
 				
 				}
+			}
+			
+			else if(isset($_POST['langhide']) && $_POST['langhide'] == "py" ){
+				
+				$result = $ssh->exec('python hello.py');
+				
+			
 			}
 			
 			
