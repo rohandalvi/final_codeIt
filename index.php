@@ -4,11 +4,8 @@
     require_once "common/variables.php";
 	session_start();
 	
-	//author: SB; comment: set the default language to "C"
-	if(!isset($_GET['lang']))
-	{
-		$_GET['lang'] = "c";
-	}
+	
+	include ("handler/currlang.php"); // get the current language and update the label likewise
 	
 	//author: SB; comment: script for publish code functionality
 	$pubfilecontent = "";
@@ -149,7 +146,7 @@
 					<ul class="nav pull-right">
 					  <li class="">
 						<label style="padding: 10px 15px 5px; color: #777777;">
-						  Current Language :  <?php echo $_GET['lang'] ?>
+						  Current Language :  <?php echo $currLang ?>
 						</label>
 					  </li>
 					</ul>
