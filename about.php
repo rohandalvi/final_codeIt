@@ -41,7 +41,7 @@
 					</div>
 				</div>
 		</div>
-        <div class="row-fluid" style="margin-top: 60px;">
+        <div class="row-fluid" style="margin-top: 20px;">
             <div class="row-fluid">
                 <div class="span2">
                 

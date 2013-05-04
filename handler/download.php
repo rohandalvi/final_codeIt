@@ -184,15 +184,25 @@
 		if(isset($_POST['code'])) {
 			$a = $_POST['code'];
 			
-			$count = 0;
-			do
+			// if file session not set creat a new file.
+			if(!isset($_SESSION['file']))
 			{
-				// generate name of the file with random string
-				$fname = get_random_string("userfile", 8);
-				$random_no = str_pad(rand(0,99), 2, "0", STR_PAD_LEFT);
-				$myFile = 'user_'.$random_no.'_'.$fname.".txt";
-				
-			}while(file_exists($myFile));
+				do
+				{
+					// generate name of the file with random string
+					$fname = get_random_string("userfile", 8);
+					$random_no = str_pad(rand(0,99), 2, "0", STR_PAD_LEFT);
+					$myFile = 'user_'.$random_no.'_'.$fname.".txt";
+					
+				}while(file_exists($myFile));
+			
+			}
+			else // else update the existing file.
+			{
+				$myFile =  $_SESSION['file'];
+				unset($_SESSION['file']);
+			}
+			
 			
 			$fh = fopen($myFile, 'w') or die("can't open file");
 			fwrite($fh, $a);

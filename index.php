@@ -9,12 +9,14 @@
 	
 	//author: SB; comment: script for publish code functionality
 	$pubfilecontent = "";
-	unset($pubfilecontent);// unset the variable by default
+	unset($pubfilecontent);// unset the session by default
+	unset($_SESSION['file']);// unset file session by default
 	if(isset($_GET['file']))
 	{
 		$pubfilecontent = file_get_contents('handler/'.$_GET['file'], true);
+		$_SESSION['file'] = $_GET['file']; // set file session
 	}
-	
+
 	
 ?>
 
