@@ -110,13 +110,18 @@
 	  <div class="row-fluid" style="margin-right:-20px;">
 		<div class="row">
 			    <div class="navbar" >
-					<div class="navbar-inner" style="margin-left:20px;">
+					<div class="navbar-inner" style="margin-left:20px; background-image: linear-gradient(to bottom, #333, #333);">
 					<!-- Author: Shardul Bagade; Comment: Added href URL. -->
-					<a class="brand" href=<?php echo BASE_URL."/codeIt/index.php" ?>>CodeIt</a>
+					<a class="brand" style="color: #bbb; text-shadow: none;"
+						href=<?php echo BASE_URL."/codeIt/index.php" ?>>CodeIt</a>
 					<ul class="nav">
-					<li class="active"><a href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home</a></li>
-					<li><a href=<?php echo BASE_URL."/codeIt/tutorials_tips.php" ?>>Tutorials / Tips</a></li>
-					<li><a href="about.php">About</a></li>
+					<li class="active">
+						<a style="color: #000; text-shadow: none;"
+							href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home</a></li>
+					<li><a style="color: #bbb; text-shadow: none;"
+							href=<?php echo BASE_URL."/codeIt/tutorials_tips.php" ?>>Tutorials / Tips</a></li>
+					<li><a style="color: #bbb; text-shadow: none;"
+							href="about.php">About</a></li>
 					
 					
 					</ul>
@@ -160,7 +165,7 @@
 					<!-- Author: SB; Comment: used pull-right class of bootstrap instead of hardcoding the style of the label -->
 					<ul class="nav pull-right">
 					  <li class="">
-						<label style="padding: 10px 15px 5px; color: #777777;">
+						<label style="padding: 10px 15px 5px; color: #333; cursor: default;">
 						  Current Language :  <?php echo $currLang ?>
 						</label>
 					  </li>
@@ -355,6 +360,7 @@
                             lineNumbers: true,
                             indentUnit: 4,
                             tabMode: "shift",
+							placeholder: "Your code goes here",
                             matchBrackets: true
                             });
                                <?php }?>
@@ -365,6 +371,7 @@
                                lineNumbers: true,
                                smartIndent: true,
                                tabMode: "shift",
+							   placeholder: "Your code goes here",
                                matchBrackets: true
 
                             });
@@ -374,6 +381,7 @@
                             var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                             lineNumbers: true,
                             matchBrackets: true,
+							placeholder: "Your code goes here",
                             mode: "text/x-c++src"
                             });
                               <?php } ?>
@@ -383,6 +391,7 @@
                                 value:"class", 	
                                 lineNumbers: true,
                                 matchBrackets: true,
+								placeholder: "Your code goes here",
                                 mode: "text/x-java"
                                 });
 								
@@ -398,6 +407,7 @@
                                     mode: "text/x-php",
                                     indentUnit: 4,
                                     indentWithTabs: true,
+									placeholder: "Your code goes here",
                                     enterMode: "keep",
                                     tabMode: "shift"
 
