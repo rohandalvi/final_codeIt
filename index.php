@@ -344,10 +344,24 @@
 						<li><input type="button" id="btnshowtestcase" class="btn fa-input" value="Add test cases" style="margin-left:20px;"></li>
 						<li><input type="submit" id="btnpublish" name="submission" class="btn fa-input" value="Publish" style="margin-left:20px;"></li>
 						<script>
-							$("#btnshowtestcase").click(function () {
+						
+						$("#btnshowtestcase").click(function () {
 								/// function to show the UI for test cases
 								/// hide and show test case UI
 								/// change the height of code text area while hiding and showing test case UI
+								
+								if(document.getElementById('lang_id').style.visibility == 'visible') // close language panel if open
+								{	
+									document.getElementById('lang_id').style.visibility = 'hidden';
+									$('#lang_id').hide();
+								}
+								
+								if(document.getElementById('richtext_id').style.visibility == 'visible') // close rich text box panel if open
+								{								
+									document.getElementById('richtext_id').style.visibility = 'hidden';
+									$('#richtext_id').hide();
+								}
+								
 								if(document.getElementById('testcasewrapper').style.visibility == 'visible')
 								{
 									document.getElementById('testcasewrapper').style.visibility = 'hidden';
@@ -360,7 +374,11 @@
 									document.getElementById('testcasewrapper').style.visibility = 'visible';
 									$('#testcasewrapper').show("medium");
 								}
+								
+								
 							});
+		
+							
 						</script>
 						</ul>
 						</div>
