@@ -144,6 +144,12 @@
 						</button>
 					</li>
 					<li id="test" class="">
+						<button type="image" class="btn btn-primary" id="btnnewcode" name="btnnewcode"
+							class="" style="margin-left:20px;">
+						  <i class="icon-file icon-white" rel="tooltip"></i> New
+						</button>
+					</li>
+					<li id="test" class="">
 						<button type="image" class="btn btn-primary" id="btnrichtext" name="btnrichtext" class="" value="Rich Text" 
 								rel="tooltip" style="margin-left:20px;"">
 						  <i class="icon-edit icon-white"></i> Edit
@@ -249,6 +255,18 @@
 					$('#clear').click(function(event) {
 						event.preventDefault(); // to stop submit
 						editor.setValue("");
+					});
+					
+					// new code
+					$('#btnnewcode').click(function(event) {
+					
+						event.preventDefault(); // to stop submit
+						var retVal = confirm("Previous code will be lost. Do you want to continue ?");
+						if( retVal == true ){
+							editor.setValue("");
+						}else{
+							// do nothing
+						}
 					});
 					
 					
