@@ -7,7 +7,7 @@
 	//author: SB; comment: set the default language to "C"
 	if(!isset($_GET['lang']))
 	{
-		$_GET['lang'] = "C";
+		$_GET['lang'] = "c";
 	}
 	
 	//author: SB; comment: script for publish code functionality
@@ -33,6 +33,7 @@
     <!--<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>-->
 	<!--<script src="https://raw.github.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script> -->
     <!-- codemirror js files -->
+	<script src ="js/user/common.js"></script>
     <script src="js/codemirror.js"></script>
     <script src="js/clike.js"></script>
     <script src="js/php.js"></script>
@@ -66,10 +67,8 @@
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
             <script type="text/javascript">
-            var name;
-            var get = "hello";
-             get = "<?php  echo $GET['lang']; ?>";
-            window.console.log("Get console value "+"<? echo $_GET['lang']; ?>");
+				var name;
+           
             	function setClassName()
             	{
             		 name = prompt("Enter class name: ", "Type your java class name here");
@@ -82,44 +81,18 @@
             		return name;
             	}
             	
-            	function increaseFontSize()
-		{
-			var el = document.getElementById('editor');
-			var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
-			var fontSize = parseFloat(style); 
-			// now you have a proper float for the font size (yes, it can be a float, not just an integer)
-			
-			el.style.fontSize = (fontSize + 1) + 'px';
-			el.style.setProperty('font-size',fontSize, 'important');
-			//document.getElementById('code').style.setProperty('font-size',e1.s)
-			window.console.log(el.style.fontSize);
-		}
             </script>
             
            
 	<script type="text/javascript" >
-         var isLangPaneClicked = false;
 		$(document).ready(function() 
 		{
 			$('#lang_id').hide(); // default behavior is to hide language selection panel
 			$('#testcasewrapper').hide(); // default behavior is to hide add test case UI
+			$('#richtext_id').hide(); // default behavior is to hide language selection panel
 		});
 		
 		// Author: Shardul Bagade; Comment: Removed unwanted functions
-		
-		function pinUnpinLangPanel()
-		{
-			if(document.getElementById('lang_id').style.visibility == 'visible')
-			{
-				document.getElementById('lang_id').style.visibility = 'hidden';
-				$('#lang_id').hide();
-			}
-			else if(document.getElementById('lang_id').style.visibility != 'visible')
-			{
-				document.getElementById('lang_id').style.visibility = 'visible';
-				$('#lang_id').show("medium");
-			}
-		}
 		
 	</script>
 	<style>
@@ -165,12 +138,9 @@
 						<input type="button" id="btnlanguage" name="btnlanguage" class="btn fa-input" value="Languages" 
 							onclick="pinUnpinLangPanel()" rel="tooltip" style="margin-left:20px;"/>
 					</li>
-					<li>
-						<input type="button" id="btnprint" name="btnprint" class="btn fa-input" value="Print" onclick="printTextArea()" rel="tooltip" style="margin-left:20px;"/>
-					</li>
-					<li>
-						
-						<input type="button" id="btn_increase_font_size" name="btn_increase_font_size" class="btn fa-input" value="Increase Font Size" onclick="increaseFontSize()" rel="tooltip" style="margin-left:20px;"  />
+					<li id="test" class="">
+						<input type="button" id="btnrichtext" name="btnrichtext" class="btn fa-input" value="Rich Text" 
+							onclick="pinUnpinRichTextPanel()" rel="tooltip" style="margin-left:20px;"/>
 					</li>
 					</ul>
 					
@@ -197,6 +167,70 @@
 					  </div>
 				</div>
 			</div>
+			
+			<div id="richtext_id" class="row" style="">
+			    <div class="navbar" style="margin-bottom:5px; margin-left:20px;	">
+					<div class="navbar-inner">
+						<ul class="nav">
+						  <li><input type="button" id="undo" onClick="doUndo()" class="btn fa-input" value="Undo" style="margin-left:0px;"></li>
+						  <li><input type="button" id="redo" onClick="doRedo()" class="btn fa-input" value="Redo" style="margin-left:20px;"></li>
+						  <li><input type="button" id="print" onClick="doPrint()" class="btn fa-input" value="Print" style="margin-left:20px;"></li>
+						  <li><label style="margin-left:20px; padding: 10px 15px 5px; color: #777777;">Font Size</label></li>
+						  <li>
+							<select id="fontSelect" size="5" id="testList" value="14"
+								style="height:25px; width:60px; margin-left:-5px; margin-top:8px; color: #777777;" onChange="doFontChange()">
+								
+								<option value="14" selected="selected">14</option>
+								<option value="6">6</option>
+								<option value="8">8</option>	
+								<option value="10">10</option>
+								<option value="12">12</option> 
+								<option value="14">14</option>
+								<option value="16">16</option>	
+								<option value="18">18</option>
+								<option value="20">20</option>									
+							</select>​
+						</li>
+						</ul>
+					  </div>
+				</div>
+			</div>
+			
+			<script type="text/javascript" >
+          
+					// Author: Shardul Bagade; Comment: Change font based on selected value
+					function doFontChange(){  
+					 
+						// donot delete this commented code. for future reference
+						
+						//var newFontSize = editor.display.wrapper.style.fontSize + 1;
+						//alert(editor.getWrapperElement().style["font-size"]);
+						//editor.display.wrapper.style.fontSize = newFontSize + "px";
+						//editor.refresh();
+						
+						editor.display.wrapper.style.fontSize = document.getElementById("fontSelect").value + "px";
+						editor.refresh();
+					  
+					}
+					
+					
+					// Author: Shardul Bagade; Comment: Print the code
+					function doPrint(){  
+					
+							var s = editor.getValue();
+							var regExp=/\n/gi;
+							s = s.replace(regExp,'<br>');
+							pWin = window.open('','pWin','location=yes, menubar=yes, toolbar=yes');
+							pWin.document.open();
+							pWin.document.write('<html><head></head><body>');
+							pWin.document.write(s);
+							pWin.document.write('</body></html>');
+							pWin.print();
+							pWin.document.close();
+							pWin.close();
+					}
+									
+			</script>
 			
 			<!-- Author: Shardul Bagade; Comment: Call download.php which contains downloading script -->
 			<!-- Author: Shardul Bagade; Comment: download script shifted to handler folder -->
@@ -276,8 +310,10 @@
                                 matchBrackets: true,
                                 mode: "text/x-java"
                                 });
-
-                                 <?php } ?>
+								
+								
+								
+                            <?php } ?>
 
                               <?php if(isset($_GET['lang']) && $_GET['lang'] == 'php') { ?>
                                   
