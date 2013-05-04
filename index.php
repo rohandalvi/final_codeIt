@@ -131,14 +131,23 @@
 			    <div id="lang_anchor" class="navbar" style="margin-bottom:5px; margin-left:-20px;">
 					<div class="navbar-inner" style="margin-left:20px;">
 					<ul class="nav menu">
-					<li class="active ListItem"><input type="submit" id="runsubmit" name="submission" class="btn fa-input" value="Run"/></li>
-					<li id="test" class="">
-						<input type="button" id="btnlanguage" name="btnlanguage" class="btn fa-input" value="Languages" 
-							onclick="pinUnpinLangPanel()" rel="tooltip" style="margin-left:20px;"/>
+					<li class="ListItem">
+						<button type="submit" class="btn btn-primary" id="runsubmit" name="submission" value="Run"
+							class="" style="margin-left:0px;">
+						  <i class="icon-play icon-white"></i> Run
+						</button>
 					</li>
 					<li id="test" class="">
-						<input type="button" id="btnrichtext" name="btnrichtext" class="btn fa-input" value="Rich Text" 
-							onclick="pinUnpinRichTextPanel()" rel="tooltip" style="margin-left:20px;"/>
+						<button type="image" class="btn btn-primary" id="btnlanguage" name="btnlanguage"
+							class="" style="margin-left:20px;">
+						  <i class="icon-th-list icon-white" rel="tooltip"></i> Language
+						</button>
+					</li>
+					<li id="test" class="">
+						<button type="image" class="btn btn-primary" id="btnrichtext" name="btnrichtext" class="" value="Rich Text" 
+								rel="tooltip" style="margin-left:20px;"">
+						  <i class="icon-edit icon-white"></i> Edit
+						</button>
 					</li>
 					</ul>
 					
@@ -170,11 +179,24 @@
 			    <div class="navbar" style="margin-bottom:5px; margin-left:20px;	">
 					<div class="navbar-inner">
 						<ul class="nav">
-						  <li><input type="button" id="undo" onClick="doUndo()" class="btn fa-input" value="Undo" style="margin-left:0px;"></li>
-						  <li><input type="button" id="redo" onClick="doRedo()" class="btn fa-input" value="Redo" style="margin-left:20px;"></li>
-						  <li><input type="button" id="print" onClick="doPrint()" class="btn fa-input" value="Print" style="margin-left:20px;"></li>
-						  <li><label style="margin-left:20px; padding: 10px 15px 5px; color: #777777;">Font Size</label></li>
-						  <li>
+							<li>
+							<input type="image" id="undo" class="fa-input" value="Undo" title="Undo"
+								style="margin-left:0px; margin-top:2px; height: 30px; weight:20px;" src="img/undo.png">
+							</li>
+							<li>
+							<input type="image" id="redo" class="fa-input" value="Redo" title="Redo"
+								style="margin-left:20px; margin-top:2px; height: 30px; weight:20px;" src="img/redo.png">
+							</li>
+							<li>
+							<input type="image" id="print" class="fa-input" value="Print" title="Print code"
+								style="margin-left:20px; margin-top:2px; height: 40px; weight:20px;" src="img/print.png">
+							</li>
+							<li>
+							<input type="image" id="clear" class="fa-input" value="Clear" title="Clear code"
+								style="margin-left:20px; margin-top:6px; height:30px; weight:20px;" src="img/clear.png">
+							</li>
+							<li><label style="margin-left:20px; padding: 10px 15px 5px; color: #777777;">Font Size</label></li>
+							<li>
 							<select id="fontSelect" size="5" id="testList" value="14"
 								style="height:25px; width:60px; margin-left:-5px; margin-top:8px; color: #777777;" onChange="doFontChange()">
 								
@@ -196,6 +218,43 @@
 			
 			<script type="text/javascript" >
           
+		  
+					$('#btnlanguage').click(function(event) {
+						event.preventDefault(); // to stop submit
+						pinUnpinLangPanel();
+					});
+					
+					$('#btnrichtext').click(function(event) {
+						event.preventDefault(); // to stop submit
+						pinUnpinRichTextPanel();
+					});
+					
+					$('#undo').click(function(event) {
+						event.preventDefault(); // to stop submit
+						doUndo();
+					});
+					
+					$('#redo').click(function(event) {
+						event.preventDefault(); // to stop submit
+						doRedo();
+					});
+					
+					$('#print').click(function(event) {
+						event.preventDefault(); // to stop submit
+						doPrint();
+					});
+					
+					
+					// clear the contents of the code textarea
+					$('#clear').click(function(event) {
+						event.preventDefault(); // to stop submit
+						editor.setValue("");
+					});
+					
+					
+					
+
+					
 					// Author: Shardul Bagade; Comment: Change font based on selected value
 					function doFontChange(){  
 					 
@@ -337,16 +396,31 @@
 						<div class="navbar-inner" style="margin-left:20px;">
 						<ul class="nav">
 						<!-- Author: Shardul Bagade; Comment: Button for downloading code -->
-						<li><input type="submit" id="dwnldsubmit" name="submission" class="btn fa-input" value="Download"></li>
-						<li><input type="button" id="btnshowtestcase" class="btn fa-input" value="Add test cases" style="margin-left:20px;"></li>
-						<li><input type="submit" id="btnpublish" name="submission" class="btn fa-input" value="Publish" style="margin-left:20px;"></li>
+						<li>
+						<button type="submit" id="dwnldsubmit" name="submission" class="btn btn-primary" value="Download"
+							class="" style="margin-left:0px;">
+						  <i class="icon-download-alt icon-white"></i> Download
+						</button>
+						<li>
+						<button type="button" id="btnshowtestcase" name="submission" class="btn btn-primary" value="Add test cases"
+							class="" style="margin-left:20px;">
+						  <i class="icon-plus icon-white"></i> Add test cases
+						</button>
+						</li>
+						<li>
+						<button type="submit" id="btnpublish" name="submission" class="btn btn-primary" value="Publish"
+							class="" style="margin-left:20px;">
+						  <i class="icon-share icon-white"></i> Publish
+						</button>
+						</li>
 						<script>
 						
-						$("#btnshowtestcase").click(function () {
+						$("#btnshowtestcase").click(function (event) {
 								/// function to show the UI for test cases
 								/// hide and show test case UI
 								/// change the height of code text area while hiding and showing test case UI
 								
+								event.preventDefault();
 								if(document.getElementById('lang_id').style.visibility == 'visible') // close language panel if open
 								{	
 									document.getElementById('lang_id').style.visibility = 'hidden';
