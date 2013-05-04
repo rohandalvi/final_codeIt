@@ -90,6 +90,7 @@
 			$('#lang_id').hide(); // default behavior is to hide language selection panel
 			$('#testcasewrapper').hide(); // default behavior is to hide add test case UI
 			$('#richtext_id').hide(); // default behavior is to hide language selection panel
+			editor.display.wrapper.style.height = 400 + "px"; //default height of code textarea
 		});
 		
 		// Author: Shardul Bagade; Comment: Removed unwanted functions
@@ -238,7 +239,7 @@
                             <input type="hidden" id="classname" name="classname" />
                             <input type="hidden" value=<?php echo $_GET['lang'] ?> name="langhide" />
                             <textarea id ="code" name="code" class="span8"
-								style="height:442px; width:100%; max-width:100%; min-width:100%;"><?php if(isset($pubfilecontent)){echo $pubfilecontent;} ?></textarea>
+								style="height:400px; width:100%; max-width:100%; min-width:100%;"><?php if(isset($pubfilecontent)){echo $pubfilecontent;} ?></textarea>
 								<!--<textarea id ="code1" name="code" class="span8"
 								style="height:442px; width:100%; max-width:100%; min-width:100%;">This is demo text area for sample usage</textarea>-->
 								
@@ -285,7 +286,7 @@
                                <?php }?>
 
                             <?php if(isset($_GET['lang']) && $_GET['lang'] == 'c') { ?>
-                            var jsEditor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                            var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                mode: "javascript",
                                lineNumbers: true,
                                smartIndent: true,
@@ -317,7 +318,7 @@
 
                               <?php if(isset($_GET['lang']) && $_GET['lang'] == 'php') { ?>
                                   
-                                  var phpeditor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                                  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                    lineNumbers: true,
                                     matchBrackets: true,
                                     mode: "text/x-php",
@@ -351,15 +352,11 @@
 								{
 									document.getElementById('testcasewrapper').style.visibility = 'hidden';
 									$('#testcasewrapper').hide("slow");
-									
-									var text = document.getElementById('code');
-									text.style.height = '442px';
+									editor.display.wrapper.style.height = 400 + "px";
 								}
 								else if(document.getElementById('testcasewrapper').style.visibility != 'visible')
 								{
-									var text = document.getElementById('code');
-									text.style.height = '320px';
-									
+									editor.display.wrapper.style.height = 290 + "px";
 									document.getElementById('testcasewrapper').style.visibility = 'visible';
 									$('#testcasewrapper').show("medium");
 								}
@@ -403,7 +400,7 @@
 	<!--<div id="main" class="container clear-top">
 	<p>Your footer content here</p>
 	</div>-->
-        <div class ="navbar navbar-fixed-bottom">
+        <div class ="navbar">
             <div class="pagination pagination-centered">
                 <ul>
                     <li><a href="index.php">Home</a></li>
