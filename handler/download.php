@@ -6,9 +6,9 @@
 	// v1.2 Author: Shardul Bagade; Comment: Publish code script added
 	// v1.3 Author: Tushar Nikam; Comment: Added RUN code for Python, C++ with Arguments
 	// import files which are needed
-	require_once "..//common/utilities.php";
-	require_once "..//common/variables.php";
-	include('ssh_connection.php');
+	require_once "../common/utilities.php";
+	require_once "../common/variables.php";
+	include('../phpseclib/SSH2.php');
 	
 	session_start();
 	
@@ -16,8 +16,9 @@
 	// Author: SB; Comment: script to run programs of specified languages
 	if(isset($_POST['submission']) && $_POST['submission'] == "Run")
 	{
-		$mypass = "Password Goes Here";
+		$mypass = "mypassword";
 		$result = "xxx";
+		
 		//echo("Login ");
 		$ssh = new NET_SSH2('glados.cs.rit.edu');
 		if(!$ssh->login('tln8399',$mypass))
@@ -30,7 +31,8 @@
 		{
 			// run C program
 			if(isset($_POST['langhide']) && $_POST[ 'langhide'] == "c")
-			{
+			{	
+				$pieces = explode(",", $_POST['testCase']);
 				$result =  $ssh->exec('gcc -o main hello.c');
 				if($result != "")
 				{
@@ -45,7 +47,11 @@
 						//$result = $ssh->exec('./main '.'testCase1.value');
 					//}
 					//else{
-						$result = $ssh->exec('./main '.$_POST['testCase']);
+					$result = array();
+					for($i=0;$i<count($pieces);$i++)
+						$result[$i] = $ssh->exec('./main '.$pieces[$i]);
+						
+					
 					//}	
 					if(count($result)>0)
 					{
@@ -61,7 +67,8 @@
 			
 			//run C++ Program
 			if(isset($_POST['langhide']) && $_POST['langhide'] == "cpp"){
-			
+				
+				$pieces = explode(",", $_POST['testCase']);
 				$result = $ssh->exec('g++ -o main hello.cpp');
 				if($result != "")
 				{
@@ -70,7 +77,9 @@
 				}
 				else
 				{
-					$result = $ssh->exec('./main '.$_POST['testCase']);
+					$result = array();
+					for($i=0;$i<count($pieces);$i++)
+						$result[$i] = $ssh->exec('./main '.$pieces[$i]);
 					if(count($result)>0)
 					{
 						// run successful
@@ -83,8 +92,9 @@
 			// run Java program
 			else if(isset($_POST['langhide']) && $_POST['langhide'] == "java")
 			{
-				//echo $_POST['testCase'];
-				echo "1111";
+			
+				$pieces = explode(",", $_POST['testCase']);
+				
 				$result =  $ssh->exec('javac hello.java');
 				if($result != "")
 				{
@@ -95,8 +105,10 @@
 				{
 				
 					// no compilation error. run the program.
-					$result = $ssh->exec('java hello '.$_POST['testCase']);
-					
+					//$result = $ssh->exec('java hello '.$_POST['testCase']);
+					$result = array();
+					for($i=0;$i<count($pieces);$i++)
+						$result[$i] = $ssh->exec('java hello '.$pieces[$i]);
 					if(count($result)>0)
 					{
 						// run successful
@@ -109,8 +121,11 @@
 			
 			else if(isset($_POST['langhide']) && $_POST['langhide'] == "py" ){
 				
-				$result = $ssh->exec('python hello.py');
-				
+				$pieces = explode(",", $_POST['testCase']);
+				$result = array();
+					for($i=0;$i<count($pieces);$i++)
+				//	$result = $ssh->exec('python hello.py '.$_POST['testCase']);
+						$result[$i] = $ssh->exec('python hello.py '.$pieces[$i]);
 			
 			}
 			
@@ -119,8 +134,9 @@
 	
 		// session variable which stores the result to be output
 		$_SESSION['coderesult'] = $result;
+		
 		//unset($_SESSION['coderesult']);
-		RedirectToURL(BASE_URL."/codeIt/index.php");
+		RedirectToURL(BASE_URL."/codeIt/index.php?pieces0=".$pieces[0]."&pieces1=".$pieces[1]);
 
 	}
 	else if(isset($_POST['submission']) && $_POST['submission'] == "Download")
@@ -145,6 +161,7 @@
 			{
 				$_POST['langhide'] = "txt";
 			}	
+			
 			
 			$fh = fopen($myFile, 'w') or die("can't open file");
 			fwrite($fh, $a);

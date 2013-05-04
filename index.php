@@ -18,6 +18,7 @@
 		$pubfilecontent = file_get_contents('handler/'.$_GET['file'], true);
 	}
 	
+	
 ?>
 
 <html lang="en">
@@ -46,6 +47,10 @@
     <script src="codemirror/addon/search/match-highlighter.js"></script>
     <script src="codemirror/addon/selection/active-line.js"></script>
     <script src="codemirror/addon/lint/lint.js"></script>
+    <!-- js for tinymce -->
+
+    <script src="tiny_mce/tiny_mce.js"></script>
+    
     <!-- JS to save file in textarea -->
     
     <script src ="js/python.js"></script>
@@ -55,17 +60,45 @@
     <script src="codemirror/addon/lint/json-lint.js"></script>
     <script src="codemirror/addon/lint/javascript-lint.js"></script>
     <script src="codemirror/addon/lint/lint.js"></script>
-
+    
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+            <script type="text/javascript">
+            var name;
+            var get = "hello";
+             get = "<?php  echo $GET['lang']; ?>";
+            window.console.log("Get console value "+"<? echo $_GET['lang']; ?>");
+            	function setClassName()
+            	{
+            		 name = prompt("Enter class name: ", "Type your java class name here");
+            		//document.getElementById("classname").value=name;
+            		window.location.href = "http://localhost/codeIt/index.php?lang=java&&classname="+name;
+            	}
+            	 
+            	function getClassName()
+            	{
+            		return name;
+            	}
+            	
+            	function increaseFontSize()
+		{
+			var el = document.getElementById('editor');
+			var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+			var fontSize = parseFloat(style); 
+			// now you have a proper float for the font size (yes, it can be a float, not just an integer)
+			
+			el.style.fontSize = (fontSize + 1) + 'px';
+			el.style.setProperty('font-size',fontSize, 'important');
+			//document.getElementById('code').style.setProperty('font-size',e1.s)
+			window.console.log(el.style.fontSize);
+		}
+            </script>
             
            
 	<script type="text/javascript" >
-            
-  
-		var isLangPaneClicked = false;
+         var isLangPaneClicked = false;
 		$(document).ready(function() 
 		{
 			$('#lang_id').hide(); // default behavior is to hide language selection panel
@@ -132,6 +165,13 @@
 						<input type="button" id="btnlanguage" name="btnlanguage" class="btn fa-input" value="Languages" 
 							onclick="pinUnpinLangPanel()" rel="tooltip" style="margin-left:20px;"/>
 					</li>
+					<li>
+						<input type="button" id="btnprint" name="btnprint" class="btn fa-input" value="Print" onclick="printTextArea()" rel="tooltip" style="margin-left:20px;"/>
+					</li>
+					<li>
+						
+						<input type="button" id="btn_increase_font_size" name="btn_increase_font_size" class="btn fa-input" value="Increase Font Size" onclick="increaseFontSize()" rel="tooltip" style="margin-left:20px;"  />
+					</li>
 					</ul>
 					
 					<!-- Author: SB; Comment: used pull-right class of bootstrap instead of hardcoding the style of the label -->
@@ -150,7 +190,7 @@
 						<ul class="nav">
 						  <li><a href=<?php echo BASE_URL."/codeIt/index.php?lang=c" ?>>C</a></li>
 						  <li><a href=<?php echo BASE_URL."/codeIt/index.php?lang=cpp" ?>>C++</a></li>
-						  <li><a href=<?php echo BASE_URL."/codeIt/index.php?lang=java" ?>>Java</a></li>
+						  <li><a href="#" onClick="setClassName()">Java</a></li>
 						  <li><a href=<?php echo BASE_URL."/codeIt/index.php?lang=php" ?>>PHP</a></li>
 						  <li><a href=<?php echo BASE_URL."/codeIt/index.php?lang=py" ?>>Python</a></li>
 						</ul>
@@ -161,10 +201,13 @@
 			<!-- Author: Shardul Bagade; Comment: Call download.php which contains downloading script -->
 			<!-- Author: Shardul Bagade; Comment: download script shifted to handler folder -->
 			
-                            
+                            <input type="hidden" id="classname" name="classname" />
                             <input type="hidden" value=<?php echo $_GET['lang'] ?> name="langhide" />
                             <textarea id ="code" name="code" class="span8"
 								style="height:442px; width:100%; max-width:100%; min-width:100%;"><?php if(isset($pubfilecontent)){echo $pubfilecontent;} ?></textarea>
+								<!--<textarea id ="code1" name="code" class="span8"
+								style="height:442px; width:100%; max-width:100%; min-width:100%;">This is demo text area for sample usage</textarea>-->
+								
                             <script>
                                 <?php if(isset($_GET['lang']) && $_GET['lang'] == 'javascript') {?>
                                 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -228,6 +271,7 @@
 
                              <?php if($_GET['lang'] == 'java') {?>
                                  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                                value:"class", 	
                                 lineNumbers: true,
                                 matchBrackets: true,
                                 mode: "text/x-java"
@@ -248,8 +292,6 @@
 
                                   });
                                   <?php } ?>
-                            
-
                                 </script>
 
 								
@@ -317,10 +359,6 @@
 			?>
 		
 		</div>
-		
-		
-			
-
 	</div>
 	
 	<div id="wrap">
