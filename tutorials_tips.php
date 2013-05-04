@@ -1,4 +1,9 @@
 <!DOCTYPE HTML>
+<?php
+    
+    require_once "common/variables.php";
+	
+?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -12,8 +17,30 @@
         <script type="text/javascript" src="js/bootstrap-collapse.js"></script>
     </head>
     <body>
-        <div class="row-fluid" style="margin-top: 60px;">
-            <div class="row-fluid">
+        <div class="row-fluid" >
+		<div class="row">
+			    <div class="navbar" >
+					<div class="navbar-inner" style="margin-left:20px; background-image: linear-gradient(to bottom, #333, #333);">
+					<!-- Author: Shardul Bagade; Comment: Added href URL. -->
+					<a class="brand" style="color: #bbb; text-shadow: none;"
+						href=<?php echo BASE_URL."/codeIt/index.php" ?>>CodeIt</a>
+					<ul class="nav">
+					<li class="active">
+						<a style="color: #000; text-shadow: none;"
+							href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home</a></li>
+					<li><a style="color: #bbb; text-shadow: none;"
+							href=<?php echo BASE_URL."/codeIt/tutorials_tips.php" ?>>Tutorials / Tips</a></li>
+					<li><a style="color: #bbb; text-shadow: none;"
+							href="about.php">About</a></li>
+					
+					
+					</ul>
+					
+					</div>
+				</div>
+		</div>
+            <div class="row-fluid" style="margin-top: 20px;">
+			
                 <div class="span2">
                 
                 </div>
@@ -32,7 +59,7 @@
 							<div id="myCollapsibleExample1"><a href="#HTRun" data-toggle="collapse" style="margin-left:15px;">How To Run ?</a></div>
                                <div id="HTRun" class="collapse" style="margin-left:15px;">
                                    <br /> 
-								   1. Copy or write a code in TextArea<br />
+								   1. Copy or write a code in text area<br />
 								   2. Click "Run", as highlighted on image.
                                </div>
 							</blockquote>
@@ -126,34 +153,10 @@
 								   Python was created by Guido van Rossum in the late eighties and early nineties. 
 								   Like Perl, Python source code is also now available under the GNU General Public License (GPL).
                                </div>
-							<br />
 							
 							</div>
 							</blockquote><br />
-                            
-							<br /><div id="myCollapsibleExample"><a href="#demo1" data-toggle="collapse" style="margin-left:15px;">Programming Languages Support</a></div>
-                           <div id="demo1" class="collapse" style="margin-left:15px;">
-                               <br /><ol>
-                                   <li>C</li><li>C++</li><li>Javascript</li><li>PHP</li>
-                               </ol>
-                           </div>
-
-                            <br /><div id="myCollapsibleExample"><a href="#features" data-toggle="collapse" style="margin-left:15px;">Features Provided: </a></div>
-                               <div id="features" class="collapse" style="margin-left:15px;">
-                                   <br /> <ol>
-                                       <li>
-
-                                           Responsive Editor to write programs.
-                                       </li>
-                                       <li>Output results/errors just besides the code.</li>
-                                       <li>Syntax Highlighting.</li>
-                                       <li>Tips and Tutorials.</li>
-                                       <li>Run Test Cases.</li>
-                                       <li>Provide line highlighting when error occurs.</li>
-
-                                   </ol>
-                               </div>
-
+                          
                         </p>
                         </div>
                         
@@ -162,7 +165,7 @@
             </div>
 
         </div>
-        <div class ="navbar navbar-fixed-bottom">
+        <div class ="navbar">
             <div class="pagination pagination-centered">
                 <ul>
                     <li><a href="index.php">Home</a></li>
