@@ -115,7 +115,7 @@
 					<a class="brand" href=<?php echo BASE_URL."/codeIt/index.php" ?>>CodeIt</a>
 					<ul class="nav">
 					<li class="active"><a href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home</a></li>
-					<li><a href="#">Tutorials / Tips</a></li>
+					<li><a href=<?php echo BASE_URL."/codeIt/tutorials_tips.php" ?>>Tutorials / Tips</a></li>
 					<li><a href="about.php">About</a></li>
 					
 					
