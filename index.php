@@ -110,7 +110,7 @@
 					<!-- Author: Shardul Bagade; Comment: Added href URL. -->
 					<a class="brand" href=<?php echo BASE_URL."/codeIt/index.php" ?>>CodeIt</a>
 					<ul class="nav">
-					<li class="active"><a href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home</a></li>
+					<li class="active"><a href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home<i class="icon-home icon-white"></i></a></li>
 					<li><a href="#">Tutorials / Tips</a></li>
 					<li><a href="about.php">About</a></li>
 					
@@ -305,10 +305,12 @@
 				// Author: SB; Comment: ssh code shifted to download.php
 				if(isset($_SESSION['coderesult']))
 				{
-
+					$result_array = array();
+					$result_array = $_SESSION['coderesult'];
 			?>
 				<pre><b>Output:</b><br/>
-				<?php  echo $_SESSION['coderesult']; ?></pre>
+				<?php  foreach($result_array as $result)
+						echo "\n".$result; ?></pre>
 			  
 			<?php
 			
