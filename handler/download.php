@@ -16,12 +16,12 @@
 	// Author: SB; Comment: script to run programs of specified languages
 	if(isset($_POST['submission']) && $_POST['submission'] == "Run")
 	{
-		$mypass = "mypassword";
+		$mypass = "Enter Password";
 		$result = "xxx";
 		
 		//echo("Login ");
 		$ssh = new NET_SSH2('glados.cs.rit.edu');
-		if(!$ssh->login('tln8399',$mypass))
+		if(!$ssh->login('rsd3565',$mypass))
 		{
 		
 			$result = "Login Failed";

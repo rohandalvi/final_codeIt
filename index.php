@@ -347,11 +347,13 @@
 				// Author: SB; Comment: ssh code shifted to download.php
 				if(isset($_SESSION['coderesult']))
 				{
-
+					$result_array = array();
+					$result_array = $_SESSION['coderesult'];
 			?>
 				<pre><b>Output:</b><br/>
-				<?php  echo $_SESSION['coderesult']; ?></pre>
-			  
+				<?php  foreach($result_array as $result) 
+						echo "\n".$result;?></pre>
+			  			
 			<?php
 			
 					unset($_SESSION['coderesult']);
