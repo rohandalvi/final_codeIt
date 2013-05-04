@@ -1,4 +1,10 @@
 <!DOCTYPE HTML>
+
+<?php
+    
+    require_once "common/variables.php";
+	
+?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -12,6 +18,29 @@
         <script type="text/javascript" src="js/bootstrap-collapse.js"></script>
     </head>
     <body>
+	
+	<div class="row-fluid" >
+		<div class="row">
+			    <div class="navbar" >
+					<div class="navbar-inner" style="margin-left:20px; background-image: linear-gradient(to bottom, #333, #333);">
+					<!-- Author: Shardul Bagade; Comment: Added href URL. -->
+					<a class="brand" style="color: #bbb; text-shadow: none;"
+						href=<?php echo BASE_URL."/codeIt/index.php" ?>>CodeIt</a>
+					<ul class="nav">
+					<li class="active">
+						<a style="color: #000; text-shadow: none;"
+							href=<?php echo BASE_URL."/codeIt/index.php" ?>>Home</a></li>
+					<li><a style="color: #bbb; text-shadow: none;"
+							href=<?php echo BASE_URL."/codeIt/tutorials_tips.php" ?>>Tutorials / Tips</a></li>
+					<li><a style="color: #bbb; text-shadow: none;"
+							href="about.php">About</a></li>
+					
+					
+					</ul>
+					
+					</div>
+				</div>
+		</div>
         <div class="row-fluid" style="margin-top: 60px;">
             <div class="row-fluid">
                 <div class="span2">
@@ -73,7 +102,7 @@
             </div>
 
         </div>
-        <div class ="navbar navbar-fixed-bottom">
+        <div class ="navbar ">
             <div class="pagination pagination-centered">
                 <ul>
                     <li><a href="index.php">Home</a></li>
