@@ -6,7 +6,7 @@
 	
 	
 	
-	
+	session_start();
 ?>
 
 
@@ -14,7 +14,9 @@
 	<!--<form id="codeform" class="form-horizontal" action="" method="post">-->
 						
 		<textarea id ="" name="testCase" class="span8" placeholder="Your test cases (comma separated)" 
-			style="height:100px; width:100%; max-width:100%; min-width:100%;"></textarea>
+			style="height:100px; width:100%; max-width:100%; min-width:100%;">
+			<?php if(isset($_SESSION['testCase'])){echo "\n".$_SESSION['testCase'];  unset($_SESSION['testCase']);}?>
+			</textarea>
 		<!-- // commented right now to check whether normal code RUN button can be used for running the code with arguments as well
 		<div class="" style="width:100%; margin-left:0px;"> 
 		

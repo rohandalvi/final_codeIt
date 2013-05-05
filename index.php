@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <?php
-    
+    include('handler/functions.php');
     require_once "common/variables.php";
 	session_start();
 	
-	
-	include ("handler/currlang.php"); // get the current language and update the label likewise
+	//author: SB; comment: set the default language to "C"
+	if(!isset($_GET['lang']))
+	{
+		$_GET['lang'] = "C";
+	}
 	
 	//author: SB; comment: script for publish code functionality
 	$pubfilecontent = "";
@@ -16,7 +19,12 @@
 		$pubfilecontent = file_get_contents('handler/'.$_GET['file'], true);
 		$_SESSION['file'] = $_GET['file']; // set file session
 	}
+<<<<<<< HEAD
 
+=======
+	$regex = new functions;
+	
+>>>>>>> All changes from my functionality
 	
 ?>
 
@@ -32,7 +40,6 @@
     <!--<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>-->
 	<!--<script src="https://raw.github.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script> -->
     <!-- codemirror js files -->
-	<script src ="js/user/common.js"></script>
     <script src="js/codemirror.js"></script>
     <script src="js/clike.js"></script>
     <script src="js/php.js"></script>
@@ -66,8 +73,62 @@
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
             <script type="text/javascript">
-				var name;
-           
+            /* for text highlighting*/
+            function selectTextareaLine(tarea,lineNum) 
+                {
+                window.console.log("inside selectTextareaLine "+lineNum);
+    lineNum--; // array starts at 0
+    var lines = tarea.value.split("\n");
+
+    // calculate start/end
+    var startPos = 0; var endPos = tarea.value.length;
+    for(var x = 0; x < lines.length; x++) {
+        if(x == lineNum) {
+            break;
+        }
+        startPos += (lines[x].length+1);
+        
+    }
+
+    var letters = lines[x];
+
+    window.console.log("text is "+letters);
+    document.write("\nLine is\n"+letters.fontcolor("red"));
+    window.console.log("startpos is "+startPos);
+    var endPos = lines[lineNum].length+startPos;
+        window.console.log("endpos is "+endPos);
+        window.console.log("Line number is "+lineNum);
+    // do selection
+    // Chrome / Firefox
+
+    if(typeof(tarea.selectionStart) != "undefined") {
+        window.console.log("tarea.selectionStart is not undefined so tarea.focus() is called, it is "+tarea.selectionEnd);
+        tarea.focus();
+        tarea.selectionStart = startPos;
+        tarea.selectionEnd = endPos;
+        return true;
+    }
+
+    // IE
+    if (document.selection && document.selection.createRange) {
+        window.console.log("this one is for IE");
+        tarea.focus();
+        tarea.select();
+        var range = document.selection.createRange();
+        range.collapse(true);
+        range.moveEnd("character", endPos);
+        range.moveStart("character", startPos);
+        range.select();
+        window.console.log("Now returning true");
+        return true;
+    }
+    window.console.log("Now returning false");
+    return false;
+}
+            var name;
+            var get = "hello";
+             window.console.log(some);
+            window.console.log("Get console value "+"<? echo $_GET['lang']; ?>");
             	function setClassName()
             	{
             		 name = prompt("Enter class name: ", "Type your java class name here");
@@ -80,19 +141,53 @@
             		return name;
             	}
             	
+            	function increaseFontSize()
+		{
+			var el = document.getElementById('editor');
+			var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+			var fontSize = parseFloat(style); 
+			// now you have a proper float for the font size (yes, it can be a float, not just an integer)
+			
+			el.style.fontSize = (fontSize + 1) + 'px';
+			el.style.setProperty('font-size',fontSize, 'important');
+			//document.getElementById('code').style.setProperty('font-size',e1.s)
+			window.console.log(el.style.fontSize);
+		}
             </script>
             
            
 	<script type="text/javascript" >
+	
+         var isLangPaneClicked = false;
 		$(document).ready(function() 
 		{
 			$('#lang_id').hide(); // default behavior is to hide language selection panel
 			$('#testcasewrapper').hide(); // default behavior is to hide add test case UI
-			$('#richtext_id').hide(); // default behavior is to hide language selection panel
-			editor.display.wrapper.style.height = 400 + "px"; //default height of code textarea
+			
+			<?php 
+			if(isset($_GET['classname']) && isset($_GET['lang']) && ($_GET['lang'] == "java")) {?>
+				
+				var whatever = "<?= $_GET['classname']; ?>";
+				editor.setValue("class "+whatever+"{\n\tpublic static void main(String args[])\n\t{\n\n\n\t}\n}");
+			
+			<?php }?>
 		});
 		
 		// Author: Shardul Bagade; Comment: Removed unwanted functions
+		
+		function pinUnpinLangPanel()
+		{
+			if(document.getElementById('lang_id').style.visibility == 'visible')
+			{
+				document.getElementById('lang_id').style.visibility = 'hidden';
+				$('#lang_id').hide();
+			}
+			else if(document.getElementById('lang_id').style.visibility != 'visible')
+			{
+				document.getElementById('lang_id').style.visibility = 'visible';
+				$('#lang_id').show("medium");
+			}
+		}
 		
 	</script>
 	<style>
@@ -131,8 +226,10 @@
 					</div>
 				</div>
 		</div>
-		
-		<form id="codeform" class="form-horizontal" action="handler/download.php" method="post" style="margin-bottom: 0px; margin-left: 40px;">
+		<?php if(isset($_GET['classname'])) { $string = "handler/download.php?classname=".$_GET['classname'];?>
+			<form id="codeform" class="form-horizontal" action="<?= $string; ?>" method="post" style="margin-bottom: 0px; margin-left: 40px;">
+				<?php }else { ?>
+		<form id="codeform" class="form-horizontal" action="handler/download.php" method="post" style="margin-bottom: 0px; margin-left: 40px;"><?php } ?>
 		<div class="span7">
 			<div class="row">
 			    <div id="lang_anchor" class="navbar" style="margin-bottom:5px; margin-left:-20px;">
@@ -156,22 +253,36 @@
 						  <i class="icon-file icon-white" rel="tooltip"></i> New
 						</button>
 					</li>
+<<<<<<< HEAD
 					<li id="test" class="">
 						<button type="image" class="btn btn-primary" id="btnrichtext" name="btnrichtext" class="" value="Rich Text" 
 								rel="tooltip" style="margin-left:20px;"">
 						  <i class="icon-edit icon-white"></i> Edit
 						</button>
+=======
+					<li>
+						<input type="button" id="btnprint" name="btnprint" class="btn fa-input" value="Print" onclick="printTextArea()" rel="tooltip" style="margin-left:20px;"/>
+					</li>
+					<li>
+						
+						<input type="button" id="btn_increase_font_size" name="btn_increase_font_size" class="btn fa-input" value="Increase Font Size" onclick="increaseFontSize()" rel="tooltip" style="margin-left:20px;"  />
+>>>>>>> All changes from my functionality
 					</li>
 					</ul>
 					
 					<!-- Author: SB; Comment: used pull-right class of bootstrap instead of hardcoding the style of the label -->
-					<ul class="nav pull-right">
+					<?php if(isset($_GET['lang'])) {?><ul class="nav pull-right">
 					  <li class="">
+<<<<<<< HEAD
 						<label style="padding: 10px 15px 5px; color: #333; cursor: default;">
 						  Current Language :  <?php echo $currLang ?>
+=======
+						<label style="padding: 10px 15px 5px; color: #777777;">
+						  Current Language :  <?php echo $_GET['lang'] ?>
+>>>>>>> All changes from my functionality
 						</label>
 					  </li>
-					</ul>
+					</ul><?php } ?>
 				</div>
 			</div>
 			<div id="lang_id" class="row" style="">
@@ -188,6 +299,7 @@
 				</div>
 			</div>
 			
+<<<<<<< HEAD
 			<div id="richtext_id" class="row" style="">
 			    <div class="navbar" style="margin-bottom:5px; margin-left:20px;	">
 					<div class="navbar-inner">
@@ -314,13 +426,17 @@
 									
 			</script>
 			
+=======
+>>>>>>> All changes from my functionality
 			<!-- Author: Shardul Bagade; Comment: Call download.php which contains downloading script -->
 			<!-- Author: Shardul Bagade; Comment: download script shifted to handler folder -->
 			
                             <input type="hidden" id="classname" name="classname" />
                             <input type="hidden" value=<?php echo $_GET['lang'] ?> name="langhide" />
                             <textarea id ="code" name="code" class="span8"
-								style="height:400px; width:100%; max-width:100%; min-width:100%;"><?php if(isset($pubfilecontent)){echo $pubfilecontent;} ?></textarea>
+								style="height:442px; width:100%; max-width:100%; min-width:100%;"><?php if(isset($pubfilecontent)){echo $pubfilecontent;} 
+							elseif(isset($_SESSION['code'])){ echo $_SESSION['code']; unset($_SESSION['code']);}
+								?></textarea>
 								<!--<textarea id ="code1" name="code" class="span8"
 								style="height:442px; width:100%; max-width:100%; min-width:100%;">This is demo text area for sample usage</textarea>-->
 								
@@ -362,19 +478,29 @@
                             lineNumbers: true,
                             indentUnit: 4,
                             tabMode: "shift",
+<<<<<<< HEAD
 							placeholder: "Your code goes here",
                             matchBrackets: true
+=======
+                            matchBrackets: true,
+                            autoCloseBrackets: true
+>>>>>>> All changes from my functionality
                             });
                                <?php }?>
 
                             <?php if(isset($_GET['lang']) && $_GET['lang'] == 'c') { ?>
-                            var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-                               mode: "javascript",
+                            var jsEditor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                               mode: "text/x-csrc",
                                lineNumbers: true,
                                smartIndent: true,
                                tabMode: "shift",
+<<<<<<< HEAD
 							   placeholder: "Your code goes here",
                                matchBrackets: true
+=======
+                               matchBrackets: true,
+                               autoCloseBrackets: true
+>>>>>>> All changes from my functionality
 
                             });
                                 <?php }?>
@@ -393,17 +519,20 @@
                                 value:"class", 	
                                 lineNumbers: true,
                                 matchBrackets: true,
+<<<<<<< HEAD
 								placeholder: "Your code goes here",
                                 mode: "text/x-java"
+=======
+                                mode: "text/x-java",
+                                autoCloseBrackets: true
+>>>>>>> All changes from my functionality
                                 });
-								
-								
-								
-                            <?php } ?>
+
+                                 <?php } ?>
 
                               <?php if(isset($_GET['lang']) && $_GET['lang'] == 'php') { ?>
                                   
-                                  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                                  var phpeditor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                    lineNumbers: true,
                                     matchBrackets: true,
                                     mode: "text/x-php",
@@ -411,7 +540,8 @@
                                     indentWithTabs: true,
 									placeholder: "Your code goes here",
                                     enterMode: "keep",
-                                    tabMode: "shift"
+                                    tabMode: "shift",
+                                    smartIndent: true
 
                                   });
                                   <?php } ?>
@@ -444,6 +574,7 @@
 						</button>
 						</li>
 						<script>
+<<<<<<< HEAD
 						
 						$("#btnshowtestcase").click(function (event) {
 								/// function to show the UI for test cases
@@ -463,23 +594,29 @@
 									$('#richtext_id').hide();
 								}
 								
+=======
+							$("#btnshowtestcase").click(function () {
+								/// function to show the UI for test cases
+								/// hide and show test case UI
+								/// change the height of code text area while hiding and showing test case UI
+>>>>>>> All changes from my functionality
 								if(document.getElementById('testcasewrapper').style.visibility == 'visible')
 								{
 									document.getElementById('testcasewrapper').style.visibility = 'hidden';
 									$('#testcasewrapper').hide("slow");
-									editor.display.wrapper.style.height = 400 + "px";
+									
+									var text = document.getElementById('code');
+									text.style.height = '442px';
 								}
 								else if(document.getElementById('testcasewrapper').style.visibility != 'visible')
 								{
-									editor.display.wrapper.style.height = 290 + "px";
+									var text = document.getElementById('code');
+									text.style.height = '320px';
+									
 									document.getElementById('testcasewrapper').style.visibility = 'visible';
 									$('#testcasewrapper').show("medium");
 								}
-								
-								
 							});
-		
-							
 						</script>
 						</ul>
 						</div>
@@ -496,20 +633,113 @@
 				Compiler's output here:	
 			</div>
 			<?php
-				// Author: SB; Comment: ssh code shifted to download.php
-				if(isset($_SESSION['coderesult']))
+			if(isset($_SESSION['compilation_error'])) //if a compilation error has occurred in any case
+			{
+				?><pre><b style="text-align: center;">Compiler thrown Error is:</b>
+				
+				
+				<?php 
+				switch($_GET['lang']) //this switch is to check which pattern should be applied to process the regular expression.
 				{
-					$result_array = array();
-					$result_array = $_SESSION['coderesult'];
-			?>
+					case "java": $pattern = "/\java:\d/i";break;
+					case "cpp" : $pattern = "(cpp:[0-9])"; break;
+					case "c"   : $pattern = "(c:[0-9])";break;
+					case "py"  : $pattern = "/\line \d/i"; break;
+							 
+				}
+				if(preg_match_all($pattern, $_SESSION['compilation_error'],$matches)) //if pattern matches with any part of compilation error, then extract line number.
+				{
+					$solution = $regex->parseregex($matches); //this function returns the line number into $solution which is also an array.
+					 foreach($solution as $sol )
+                         {
+                             $unique = array_unique($sol); // in cases where same line number is returned multiple times by compiler, our program highlights that line just once
+                         }
+                         //echo "\nUnique elements\n\n";
+                         //print_r($unique);
+                         /*foreach($unique as $uni)
+                            echo "\n".$uni;*/
+						 //echo "\nMatch found\n"; //print_r($solution);
+                         echo "\nFrom function:\n";
+                         foreach($solution as $suba)
+                            {
+                             foreach($suba as $subarray)
+                                {
+                                    echo "\nError occurs at Line ".$subarray."\n";
+                         ?>
+                         <script type="text/javascript">
+                                      var tarea = document.getElementById("code");
+                                      selectTextareaLine(tarea,<?= $subarray ?>); //this js function prints the line after taking the line number as input.
+                                    </script>
+                                    <?php }} ?>
+                         </pre><?php
+					 // foreach($solution as $solut){
+						 // echo $solut;
+						 // }
+					unset($_SESSION['compilation_error']);
+				}
+					
+			}
+else{ // If there is no compilation error, that means the program is runnable then do this.
+				// Author: SB; Comment: ssh code shifted to download.php
+				if(isset($_SESSION['coderesult'])) // coderesult is the session variable in which the result of run is returned.
+				{
+					if(gettype($_SESSION['result'])=="Array") // if it is an array.
+					{
+						$result_array = array();
+						array_push($result_array,$_SESSION['result']); //copying array into new array for better usage.
+					
+
+						?>
 				<pre><b>Output:</b><br/>
-				<?php  foreach($result_array as $result) 
-						echo "\n".$result;?></pre>
+				<?php  
+				foreach($result_array as $result) 
+						echo "\n".$result;?></pre><?php 
+					} 
+						else //if $_SESSION is not of type array (it is of type string), then do this.
+					{
+							?>
+				<textarea id="output" readonly="true" style="height:542px; width:100%; max-width:100%; min-width:100%;">
+					<?php if($_SESSION['coderesult'] == "Login Failed"){
+						echo $_SESSION['coderesult'];}
+					else {
+					?>
+					<b>Output:<br /></b><br />
+					<?php
+					
+					if(($_GET['lang']=="java") || ($_GET['lang']=="py"))
+					{
+						//if the language selected is python, we need to know if its a normal output or error, the below code is for that.
+						//the code not added here.
+						$array_result = array();
+						$array_result = $_SESSION['coderesult'];
+						foreach($array_result as $result)
+							echo "\n".$result;
+						/*foreach($array_result as $coderesult) //this is required for java since a single string is also being returned like an array here.
+						?>
+						<pre><?php
+						 echo $coderesult; ?>*/
+						 ?>
+						
+					<?php 
+					}
+					elseif(($_GET['lang']=="c") || ($_GET['lang']=="cpp")) //if there is just one result, then it is returned as a string in case of 'c','c++'
+					{
+						
+					echo "\n".$_SESSION['coderesult'];
+					} 
+					}//end of else
+					?>
+				</textarea>
+				<?php		
+				} //end of else
+					 ?>
+						
 			  			
 			<?php
 			
 					unset($_SESSION['coderesult']);
 				}
+}
 			?>
 		
 		</div>
@@ -519,7 +749,7 @@
 	<!--<div id="main" class="container clear-top">
 	<p>Your footer content here</p>
 	</div>-->
-        <div class ="navbar">
+        <div class ="navbar navbar-fixed-bottom">
             <div class="pagination pagination-centered">
                 <ul>
                     <li><a href="index.php">Home</a></li>
@@ -528,6 +758,7 @@
                 </ul>
 
             </div>
+
 
         </div>
 	</div>
