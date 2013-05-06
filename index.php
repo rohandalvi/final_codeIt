@@ -4,11 +4,7 @@
     require_once "common/variables.php";
 	session_start();
 	
-	//author: SB; comment: set the default language to "C"
-	if(!isset($_GET['lang']))
-	{
-		$_GET['lang'] = "C";
-	}
+	include ("handler/currlang.php"); // get the current language and update the label likewise
 	
 	//author: SB; comment: script for publish code functionality
 	$pubfilecontent = "";
@@ -19,13 +15,19 @@
 		$pubfilecontent = file_get_contents('handler/'.$_GET['file'], true);
 		$_SESSION['file'] = $_GET['file']; // set file session
 	}
-<<<<<<< HEAD
-
-=======
+	
+	$currCode = "";
+	if(isset($_SESSION['code'])) 
+	{
+		$currCode = $_SESSION['code'];
+	}
+	if(isset($_GET['classname']) && isset($_GET['lang']) && ($_GET['lang'] == "java") &&!isset($_SESSION['code'])) 
+	{
+		$currCode = "class ".$_GET['classname']."{\n\tpublic static void main(String args[])\n\t{\n\n\n\t}\n}";
+	}
+	
 	$regex = new functions;
-	
->>>>>>> All changes from my functionality
-	
+
 ?>
 
 <html lang="en">
@@ -40,6 +42,7 @@
     <!--<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>-->
 	<!--<script src="https://raw.github.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script> -->
     <!-- codemirror js files -->
+	<script src ="js/user/common.js"></script>
     <script src="js/codemirror.js"></script>
     <script src="js/clike.js"></script>
     <script src="js/php.js"></script>
@@ -75,60 +78,60 @@
             <script type="text/javascript">
             /* for text highlighting*/
             function selectTextareaLine(tarea,lineNum) 
-                {
-                window.console.log("inside selectTextareaLine "+lineNum);
-    lineNum--; // array starts at 0
-    var lines = tarea.value.split("\n");
+			{
+					window.console.log("inside selectTextareaLine "+lineNum);
+					lineNum--; // array starts at 0
+					var lines = tarea.value.split("\n");
 
-    // calculate start/end
-    var startPos = 0; var endPos = tarea.value.length;
-    for(var x = 0; x < lines.length; x++) {
-        if(x == lineNum) {
-            break;
-        }
-        startPos += (lines[x].length+1);
-        
-    }
+					// calculate start/end
+					var startPos = 0; var endPos = tarea.value.length;
+					for(var x = 0; x < lines.length; x++) {
+					if(x == lineNum) {
+					break;
+					}
+					startPos += (lines[x].length+1);
 
-    var letters = lines[x];
+					}
 
-    window.console.log("text is "+letters);
-    document.write("\nLine is\n"+letters.fontcolor("red"));
-    window.console.log("startpos is "+startPos);
-    var endPos = lines[lineNum].length+startPos;
-        window.console.log("endpos is "+endPos);
-        window.console.log("Line number is "+lineNum);
-    // do selection
-    // Chrome / Firefox
+					var letters = lines[x];
 
-    if(typeof(tarea.selectionStart) != "undefined") {
-        window.console.log("tarea.selectionStart is not undefined so tarea.focus() is called, it is "+tarea.selectionEnd);
-        tarea.focus();
-        tarea.selectionStart = startPos;
-        tarea.selectionEnd = endPos;
-        return true;
-    }
+					window.console.log("text is "+letters);
+					document.write("\nLine is\n"+letters.fontcolor("red"));
+					window.console.log("startpos is "+startPos);
+					var endPos = lines[lineNum].length+startPos;
+					window.console.log("endpos is "+endPos);
+					window.console.log("Line number is "+lineNum);
+					// do selection
+					// Chrome / Firefox
 
-    // IE
-    if (document.selection && document.selection.createRange) {
-        window.console.log("this one is for IE");
-        tarea.focus();
-        tarea.select();
-        var range = document.selection.createRange();
-        range.collapse(true);
-        range.moveEnd("character", endPos);
-        range.moveStart("character", startPos);
-        range.select();
-        window.console.log("Now returning true");
-        return true;
-    }
-    window.console.log("Now returning false");
-    return false;
-}
+					if(typeof(tarea.selectionStart) != "undefined") {
+					window.console.log("tarea.selectionStart is not undefined so tarea.focus() is called, it is "+tarea.selectionEnd);
+					tarea.focus();
+					tarea.selectionStart = startPos;
+					tarea.selectionEnd = endPos;
+					return true;
+					}
+
+					// IE
+					if (document.selection && document.selection.createRange) {
+						window.console.log("this one is for IE");
+						tarea.focus();
+						tarea.select();
+						var range = document.selection.createRange();
+						range.collapse(true);
+						range.moveEnd("character", endPos);
+						range.moveStart("character", startPos);
+						range.select();
+						window.console.log("Now returning true");
+						return true;
+					}
+					window.console.log("Now returning false");
+					return false;
+			}
+			
+			
             var name;
-            var get = "hello";
-             window.console.log(some);
-            window.console.log("Get console value "+"<? echo $_GET['lang']; ?>");
+            
             	function setClassName()
             	{
             		 name = prompt("Enter class name: ", "Type your java class name here");
@@ -141,18 +144,7 @@
             		return name;
             	}
             	
-            	function increaseFontSize()
-		{
-			var el = document.getElementById('editor');
-			var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
-			var fontSize = parseFloat(style); 
-			// now you have a proper float for the font size (yes, it can be a float, not just an integer)
-			
-			el.style.fontSize = (fontSize + 1) + 'px';
-			el.style.setProperty('font-size',fontSize, 'important');
-			//document.getElementById('code').style.setProperty('font-size',e1.s)
-			window.console.log(el.style.fontSize);
-		}
+            	
             </script>
             
            
@@ -163,31 +155,20 @@
 		{
 			$('#lang_id').hide(); // default behavior is to hide language selection panel
 			$('#testcasewrapper').hide(); // default behavior is to hide add test case UI
+			$('#stdinwrapper').hide(); // default behavior is to hide add test case UI
+			$('#richtext_id').hide(); // default behavior is to hide language selection panel
+			editor.display.wrapper.style.height = 400 + "px"; //default height of code textarea
 			
-			<?php 
-			if(isset($_GET['classname']) && isset($_GET['lang']) && ($_GET['lang'] == "java")) {?>
-				
-				var whatever = "<?= $_GET['classname']; ?>";
-				editor.setValue("class "+whatever+"{\n\tpublic static void main(String args[])\n\t{\n\n\n\t}\n}");
-			
-			<?php }?>
+			getPreviousCode();
 		});
 		
-		// Author: Shardul Bagade; Comment: Removed unwanted functions
-		
-		function pinUnpinLangPanel()
+		function getPreviousCode()
 		{
-			if(document.getElementById('lang_id').style.visibility == 'visible')
-			{
-				document.getElementById('lang_id').style.visibility = 'hidden';
-				$('#lang_id').hide();
-			}
-			else if(document.getElementById('lang_id').style.visibility != 'visible')
-			{
-				document.getElementById('lang_id').style.visibility = 'visible';
-				$('#lang_id').show("medium");
-			}
+			var whatever = <?php echo json_encode($currCode); ?>;
+			editor.setValue(whatever);
 		}
+		
+		
 		
 	</script>
 	<style>
@@ -253,33 +234,23 @@
 						  <i class="icon-file icon-white" rel="tooltip"></i> New
 						</button>
 					</li>
-<<<<<<< HEAD
+
 					<li id="test" class="">
 						<button type="image" class="btn btn-primary" id="btnrichtext" name="btnrichtext" class="" value="Rich Text" 
 								rel="tooltip" style="margin-left:20px;"">
 						  <i class="icon-edit icon-white"></i> Edit
 						</button>
-=======
-					<li>
-						<input type="button" id="btnprint" name="btnprint" class="btn fa-input" value="Print" onclick="printTextArea()" rel="tooltip" style="margin-left:20px;"/>
-					</li>
-					<li>
-						
-						<input type="button" id="btn_increase_font_size" name="btn_increase_font_size" class="btn fa-input" value="Increase Font Size" onclick="increaseFontSize()" rel="tooltip" style="margin-left:20px;"  />
->>>>>>> All changes from my functionality
+
 					</li>
 					</ul>
 					
 					<!-- Author: SB; Comment: used pull-right class of bootstrap instead of hardcoding the style of the label -->
 					<?php if(isset($_GET['lang'])) {?><ul class="nav pull-right">
 					  <li class="">
-<<<<<<< HEAD
+
 						<label style="padding: 10px 15px 5px; color: #333; cursor: default;">
 						  Current Language :  <?php echo $currLang ?>
-=======
-						<label style="padding: 10px 15px 5px; color: #777777;">
-						  Current Language :  <?php echo $_GET['lang'] ?>
->>>>>>> All changes from my functionality
+
 						</label>
 					  </li>
 					</ul><?php } ?>
@@ -299,7 +270,7 @@
 				</div>
 			</div>
 			
-<<<<<<< HEAD
+
 			<div id="richtext_id" class="row" style="">
 			    <div class="navbar" style="margin-bottom:5px; margin-left:20px;	">
 					<div class="navbar-inner">
@@ -426,8 +397,7 @@
 									
 			</script>
 			
-=======
->>>>>>> All changes from my functionality
+
 			<!-- Author: Shardul Bagade; Comment: Call download.php which contains downloading script -->
 			<!-- Author: Shardul Bagade; Comment: download script shifted to handler folder -->
 			
@@ -478,29 +448,23 @@
                             lineNumbers: true,
                             indentUnit: 4,
                             tabMode: "shift",
-<<<<<<< HEAD
 							placeholder: "Your code goes here",
-                            matchBrackets: true
-=======
                             matchBrackets: true,
                             autoCloseBrackets: true
->>>>>>> All changes from my functionality
+
                             });
                                <?php }?>
 
                             <?php if(isset($_GET['lang']) && $_GET['lang'] == 'c') { ?>
-                            var jsEditor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                            var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                mode: "text/x-csrc",
                                lineNumbers: true,
                                smartIndent: true,
                                tabMode: "shift",
-<<<<<<< HEAD
 							   placeholder: "Your code goes here",
-                               matchBrackets: true
-=======
                                matchBrackets: true,
                                autoCloseBrackets: true
->>>>>>> All changes from my functionality
+
 
                             });
                                 <?php }?>
@@ -519,20 +483,17 @@
                                 value:"class", 	
                                 lineNumbers: true,
                                 matchBrackets: true,
-<<<<<<< HEAD
 								placeholder: "Your code goes here",
-                                mode: "text/x-java"
-=======
                                 mode: "text/x-java",
                                 autoCloseBrackets: true
->>>>>>> All changes from my functionality
+
                                 });
 
                                  <?php } ?>
 
                               <?php if(isset($_GET['lang']) && $_GET['lang'] == 'php') { ?>
                                   
-                                  var phpeditor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                                  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                                    lineNumbers: true,
                                     matchBrackets: true,
                                     mode: "text/x-php",
@@ -551,6 +512,9 @@
 					<?php
 					include ("handler/testcases.php"); 
 					?>
+					<?php
+					include ("handler/stdin.php"); 
+					?>
 				<div class="row" style="margin-top:10px;">
 					<div class="navbar" style="margin-bottom:5px;">
 						<div class="navbar-inner" style="margin-left:20px;">
@@ -561,10 +525,17 @@
 							class="" style="margin-left:0px;">
 						  <i class="icon-download-alt icon-white"></i> Download
 						</button>
+						</li>
 						<li>
 						<button type="button" id="btnshowtestcase" name="submission" class="btn btn-primary" value="Add test cases"
 							class="" style="margin-left:20px;">
 						  <i class="icon-plus icon-white"></i> Add test cases
+						</button>
+						</li>
+						<li>
+						<button type="button" id="btnshowstdin" name="submission" class="btn btn-primary" value="Enter stdin"
+							class="" style="margin-left:20px;">
+						  <i class="icon-plus icon-white"></i> Enter stdin
 						</button>
 						</li>
 						<li>
@@ -574,7 +545,8 @@
 						</button>
 						</li>
 						<script>
-<<<<<<< HEAD
+
+						
 						
 						$("#btnshowtestcase").click(function (event) {
 								/// function to show the UI for test cases
@@ -594,29 +566,68 @@
 									$('#richtext_id').hide();
 								}
 								
-=======
-							$("#btnshowtestcase").click(function () {
-								/// function to show the UI for test cases
-								/// hide and show test case UI
-								/// change the height of code text area while hiding and showing test case UI
->>>>>>> All changes from my functionality
 								if(document.getElementById('testcasewrapper').style.visibility == 'visible')
 								{
 									document.getElementById('testcasewrapper').style.visibility = 'hidden';
 									$('#testcasewrapper').hide("slow");
-									
-									var text = document.getElementById('code');
-									text.style.height = '442px';
+									editor.display.wrapper.style.height = 400 + "px";
 								}
 								else if(document.getElementById('testcasewrapper').style.visibility != 'visible')
 								{
-									var text = document.getElementById('code');
-									text.style.height = '320px';
+									if(document.getElementById('stdinwrapper').style.visibility == 'visible')
+									{
+										document.getElementById('stdinwrapper').style.visibility = 'hidden';
+										$('#stdinwrapper').hide("slow");
+									}
 									
+									editor.display.wrapper.style.height = 290 + "px";
 									document.getElementById('testcasewrapper').style.visibility = 'visible';
 									$('#testcasewrapper').show("medium");
 								}
+								
+								
 							});
+							
+							
+							
+							$("#btnshowstdin").click(function (event) {
+								
+								event.preventDefault();
+								if(document.getElementById('lang_id').style.visibility == 'visible') // close language panel if open
+								{	
+									document.getElementById('lang_id').style.visibility = 'hidden';
+									$('#lang_id').hide();
+								}
+								
+								if(document.getElementById('richtext_id').style.visibility == 'visible') // close rich text box panel if open
+								{								
+									document.getElementById('richtext_id').style.visibility = 'hidden';
+									$('#richtext_id').hide();
+								}
+								
+								if(document.getElementById('stdinwrapper').style.visibility == 'visible')
+								{
+									document.getElementById('stdinwrapper').style.visibility = 'hidden';
+									$('#stdinwrapper').hide("slow");
+									editor.display.wrapper.style.height = 400 + "px";
+								}
+								else if(document.getElementById('stdinwrapper').style.visibility != 'visible')
+								{
+									if(document.getElementById('testcasewrapper').style.visibility == 'visible')
+									{
+										document.getElementById('testcasewrapper').style.visibility = 'hidden';
+										$('#testcasewrapper').hide("slow");
+									}
+								
+									editor.display.wrapper.style.height = 290 + "px";
+									document.getElementById('stdinwrapper').style.visibility = 'visible';
+									$('#stdinwrapper').show("medium");
+								}
+								
+								
+							});
+		
+		
 						</script>
 						</ul>
 						</div>
@@ -683,10 +694,10 @@ else{ // If there is no compilation error, that means the program is runnable th
 				// Author: SB; Comment: ssh code shifted to download.php
 				if(isset($_SESSION['coderesult'])) // coderesult is the session variable in which the result of run is returned.
 				{
-					if(gettype($_SESSION['result'])=="Array") // if it is an array.
+					if(gettype($_SESSION['coderesult'])=="Array") // if it is an array.
 					{
 						$result_array = array();
-						array_push($result_array,$_SESSION['result']); //copying array into new array for better usage.
+						array_push($result_array,$_SESSION['coderesult']); //copying array into new array for better usage.
 					
 
 						?>
@@ -698,15 +709,16 @@ else{ // If there is no compilation error, that means the program is runnable th
 						else //if $_SESSION is not of type array (it is of type string), then do this.
 					{
 							?>
-				<textarea id="output" readonly="true" style="height:542px; width:100%; max-width:100%; min-width:100%;">
+				<textarea id="output" readonly="true" style="height:442px; width:100%; max-width:100%; min-width:100%;">
 					<?php if($_SESSION['coderesult'] == "Login Failed"){
 						echo $_SESSION['coderesult'];}
 					else {
 					?>
-					<b>Output:<br /></b><br />
-					<?php
 					
-					if(($_GET['lang']=="java") || ($_GET['lang']=="py"))
+					<?php
+					echo"\nOutput:\n";
+					//if(($_GET['lang']=="java") || ($_GET['lang']=="py") || ($_GET['lang']=="c") || ($_GET['lang']=="cpp"))
+					if(true)
 					{
 						//if the language selected is python, we need to know if its a normal output or error, the below code is for that.
 						//the code not added here.
@@ -722,7 +734,7 @@ else{ // If there is no compilation error, that means the program is runnable th
 						
 					<?php 
 					}
-					elseif(($_GET['lang']=="c") || ($_GET['lang']=="cpp")) //if there is just one result, then it is returned as a string in case of 'c','c++'
+					else if(true) //if there is just one result, then it is returned as a string in case of 'c','c++'
 					{
 						
 					echo "\n".$_SESSION['coderesult'];
@@ -749,7 +761,7 @@ else{ // If there is no compilation error, that means the program is runnable th
 	<!--<div id="main" class="container clear-top">
 	<p>Your footer content here</p>
 	</div>-->
-        <div class ="navbar navbar-fixed-bottom">
+        <div class ="navbar">
             <div class="pagination pagination-centered">
                 <ul>
                     <li><a href="index.php">Home</a></li>
