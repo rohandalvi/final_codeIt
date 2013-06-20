@@ -6,7 +6,7 @@
 	
 	include ("handler/currlang.php"); // get the current language and update the label likewise
 	
-	//author: SB; comment: script for publish code functionality
+	
 	$pubfilecontent = "";
 	unset($pubfilecontent);// unset the session by default
 	unset($_SESSION['file']);// unset file session by default
@@ -41,35 +41,11 @@
     <!-- linked files -->
     <!--<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>-->
 	<!--<script src="https://raw.github.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script> -->
-    <!-- codemirror js files -->
-	<script src ="js/user/common.js"></script>
-    <script src="js/codemirror.js"></script>
-    <script src="js/clike.js"></script>
-    <script src="js/php.js"></script>
-    <script src="js/htmlmixed.js"></script>
-    <!--<script src="js/htmlembedded.js"></script>-->
-    <script src="codemirror/mode/javascript/javascript.js"></script>
-    <script src="codemirror/mode/htmlembedded/htmlembedded.js"></script>
-    <script src="codemirror/mode/htmlmixed/htmlmixed.js"></script>
-    <script src="codemirror/addon/edit/matchbrackets.js"></script>
-    <script src="codemirror/addon/edit/closebrackets.js"></script>
-    <script src="codemirror/addon/display/placeholder.js"></script>
-    <script src="codemirror/addon/search/match-highlighter.js"></script>
-    <script src="codemirror/addon/selection/active-line.js"></script>
-    <script src="codemirror/addon/lint/lint.js"></script>
-    <!-- js for tinymce -->
-
-    <script src="tiny_mce/tiny_mce.js"></script>
-    
-    <!-- JS to save file in textarea -->
-    
-    <script src ="js/python.js"></script>
+   
     <link rel="stylesheet" href="css/codemirror.css">
     <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
     <!--Adding the Javscript lint files -->
-    <script src="codemirror/addon/lint/json-lint.js"></script>
-    <script src="codemirror/addon/lint/javascript-lint.js"></script>
-    <script src="codemirror/addon/lint/lint.js"></script>
+    
     
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -80,7 +56,7 @@
             function selectTextareaLine(tarea,lineNum) 
 			{
 					window.console.log("inside selectTextareaLine "+lineNum);
-					lineNum--; // array starts at 0
+					lineNum--; 
 					var lines = tarea.value.split("\n");
 
 					// calculate start/end
@@ -135,7 +111,7 @@
             	function setClassName()
             	{
             		 name = prompt("Enter class name: ", "Type your java class name here");
-            		//document.getElementById("classname").value=name;
+            		
             		window.location.href = "http://localhost/codeIt/index.php?lang=java&&classname="+name;
             	}
             	 
@@ -363,7 +339,7 @@
 					
 
 					
-					// Author: Shardul Bagade; Comment: Change font based on selected value
+					
 					function doFontChange(){  
 					 
 						// donot delete this commented code. for future reference
@@ -379,7 +355,7 @@
 					}
 					
 					
-					// Author: Shardul Bagade; Comment: Print the code
+				
 					function doPrint(){  
 					
 							var s = editor.getValue();
@@ -398,8 +374,7 @@
 			</script>
 			
 
-			<!-- Author: Shardul Bagade; Comment: Call download.php which contains downloading script -->
-			<!-- Author: Shardul Bagade; Comment: download script shifted to handler folder -->
+
 			
                             <input type="hidden" id="classname" name="classname" />
                             <input type="hidden" value=<?php echo $_GET['lang'] ?> name="langhide" />
@@ -499,7 +474,7 @@
                                     mode: "text/x-php",
                                     indentUnit: 4,
                                     indentWithTabs: true,
-									placeholder: "Your code goes here",
+				    placeholder: "Your code goes here",
                                     enterMode: "keep",
                                     tabMode: "shift",
                                     smartIndent: true
@@ -665,9 +640,7 @@
                          {
                              $unique = array_unique($sol); // in cases where same line number is returned multiple times by compiler, our program highlights that line just once
                          }
-                         //echo "\nUnique elements\n\n";
-                         //print_r($unique);
-                         /*foreach($unique as $uni)
+                         
                             echo "\n".$uni;*/
 						 //echo "\nMatch found\n"; //print_r($solution);
                          echo "\nFrom function:\n";
@@ -683,15 +656,12 @@
                                     </script>
                                     <?php }} ?>
                          </pre><?php
-					 // foreach($solution as $solut){
-						 // echo $solut;
-						 // }
+			
 					unset($_SESSION['compilation_error']);
 				}
 					
 			}
-else{ // If there is no compilation error, that means the program is runnable then do this.
-				// Author: SB; Comment: ssh code shifted to download.php
+else{ 
 				if(isset($_SESSION['coderesult'])) // coderesult is the session variable in which the result of run is returned.
 				{
 					if(gettype($_SESSION['coderesult'])=="Array") // if it is an array.
@@ -717,7 +687,6 @@ else{ // If there is no compilation error, that means the program is runnable th
 					
 					<?php
 					echo"\nOutput:\n";
-					//if(($_GET['lang']=="java") || ($_GET['lang']=="py") || ($_GET['lang']=="c") || ($_GET['lang']=="cpp"))
 					if(true)
 					{
 						//if the language selected is python, we need to know if its a normal output or error, the below code is for that.
@@ -786,14 +755,28 @@ else{ // If there is no compilation error, that means the program is runnable th
     <script src="../assets/js/bootstrap-alert.js"></script>
     <script src="../assets/js/bootstrap-modal.js"></script>
     <script src="../assets/js/bootstrap-dropdown.js"></script>
-    <script src="../assets/js/bootstrap-scrollspy.js"></script>
-    <script src="../assets/js/bootstrap-tab.js"></script>
-    <script src="../assets/js/bootstrap-tooltip.js"></script>
-    <script src="../assets/js/bootstrap-popover.js"></script>
-    <script src="../assets/js/bootstrap-button.js"></script>
-    <script src="../assets/js/bootstrap-collapse.js"></script>
-    <script src="../assets/js/bootstrap-carousel.js"></script>
-    <script src="../assets/js/bootstrap-typeahead.js"></script>
+     <!-- codemirror js files -->
+    <script src ="js/user/common.js"></script>
+    <script src="js/codemirror.js"></script>
+    <script src="js/clike.js"></script>
+    <script src="js/php.js"></script>
+    <script src="js/htmlmixed.js"></script>
+    <!--<script src="js/htmlembedded.js"></script>-->
+    <script src="codemirror/mode/javascript/javascript.js"></script>
+    <script src="codemirror/mode/htmlembedded/htmlembedded.js"></script>
+    <script src="codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="codemirror/addon/edit/closebrackets.js"></script>
+    <script src="codemirror/addon/display/placeholder.js"></script>
+    <!-- js for tinymce -->
+    <script src="codemirror/addon/lint/json-lint.js"></script>
+    <script src="codemirror/addon/lint/javascript-lint.js"></script>
+    <script src="codemirror/addon/lint/lint.js"></script>
+    
+    
+    <!-- JS to save file in textarea -->
+    
+    <script src ="js/python.js"></script>
     <!-- codemirror js scripts -->
     
   </body>
